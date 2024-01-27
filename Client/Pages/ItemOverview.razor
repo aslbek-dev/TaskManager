@@ -1,0 +1,66 @@
+@page "/itemoverview"
+<h1 class="page-title">All items</h1>
+@if(Items == null)
+{
+    <p>Loading ...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>Title</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Items)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code
+{
+    [Parameter]
+    public string Id { get; set; }
+
+    // The item detail is bound to an item that we want to show
+    public ItemData Item {get;set;} = new ItemData();
+
+    public IEnumerable<ItemData> Items { get; set; }
+
+    private void InitializeItems()
+    {
+        var e1 = new ItemData
+        {
+            Description = "Get bread, fruit, veg and cheese",
+            Done = false,
+            Id = 1,
+            Title = "Food shopping"
+        };
+
+        var e2 = new ItemData
+        {
+            Description = "Study well for AZ204",
+            Done = false,
+            Id = 2,
+            Title = "Study"
+        };
+
+        Items = new List<ItemData> { e1, e2 };
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        InitializeItems();
+
+        Item = Items.FirstOrDefault(x => x.Id == Convert.ToInt32(Id) );
+
+        return base.OnInitializedAsync();
+    }
+}
